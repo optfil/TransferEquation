@@ -49,6 +49,7 @@ private slots:
 
 private:
     QChartView *chartView;
+    QLabel *labelInitial;
     QComboBox *comboBoxInitial;
     QLabel *labelSizeX_1, *labelSizeX_2, *labelSizeT_1, *labelSizeT_2, *labelNX_1, *labelNX_2, *labelNT_1, *labelNT_2;
     QLabel *labelSizeX, *labelSizeT;
