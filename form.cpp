@@ -193,7 +193,6 @@ Form::Form(QWidget *parent)
 
     labelCFL_1 = new QLabel(tr("CFL number"));
     labelCFL_2 = new QLabel(tr("α = "));
-    labelCFL_2->setFont(QFont("Times"));
     labelCFL_2->setAlignment(Qt::AlignRight);
     labelCFL = new QLabel();
 
