@@ -2,11 +2,12 @@
 
 #include <QLayout>
 
+#include <algorithm>
 #include <cmath>
 #include <complex>
-#include <utility>
 #include <limits>
-#include <algorithm>
+#include <utility>
+
 
 static double initial(double x, Form::InitialProfile profile)
 {

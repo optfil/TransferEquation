@@ -3,13 +3,13 @@
 
 #include <vector>
 
-#include <QWidget>
 #include <QComboBox>
+#include <QPushButton>
 #include <QSlider>
 #include <QSpinBox>
 #include <QTabWidget>
-#include <QPushButton>
 #include <QTimer>
+#include <QWidget>
 
 #include <QtCharts/QtCharts>
 QT_CHARTS_USE_NAMESPACE
