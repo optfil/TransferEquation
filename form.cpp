@@ -8,6 +8,8 @@
 #include <limits>
 #include <utility>
 
+#include "fftw3.h"
+
 
 static double initial(double x, Form::InitialProfile profile)
 {

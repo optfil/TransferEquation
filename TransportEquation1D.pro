@@ -33,3 +33,5 @@ HEADERS += \
     parameters.h
 
 TRANSLATIONS += TransferEquation1D_rus.ts
+
+LIBS += -lfftw3
