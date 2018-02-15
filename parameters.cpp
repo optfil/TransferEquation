@@ -18,7 +18,7 @@ int Parameters::get_nt() const
 
 double Parameters::get_dx() const
 {
-    return range_x_ / nx_;
+    return range_x_ / (nx_-1);
 }
 
 double Parameters::get_dt() const

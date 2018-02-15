@@ -69,6 +69,7 @@ private:
     QLineSeries *seriesUpwindIdealDissipation, *seriesLaxIdealDissipation, *seriesLaxWendroffIdealDissipation;
     QLineSeries *seriesUpwindDispersion, *seriesLaxDispersion, *seriesLaxWendroffDispersion;
     QLineSeries *seriesUpwindDissipation, *seriesLaxDissipation, *seriesLaxWendroffDissipation;
+    QBarSeries *spectreUpwindDispersion, *spectreUpwindDissipation, *spectreLaxDispersion, *spectreLaxDissipation, *spectreLaxWendroffDispersion, *spectreLaxWendroffDissipation;
 
     QTimer *timer;
 
