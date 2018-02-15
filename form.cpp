@@ -8,8 +8,11 @@
 #include <limits>
 #include <utility>
 
+#include <complex>
 #include "fftw3.h"
 
+
+#include <QDebug>
 
 static double initial(double x, Form::InitialProfile profile)
 {
@@ -107,12 +110,12 @@ Form::Form(QWidget *parent)
     seriesLaxWendroffDissipation = new QLineSeries();
     seriesLaxWendroffDissipation->setColor(Qt::red);
     seriesLaxWendroffDissipation->setPen(QPen(seriesLaxWendroffDissipation->pen().brush(), 3));
-    spectreUpwindDispersion = new QBarSeries();
-    spectreUpwindDissipation = new QBarSeries();
-    spectreLaxDispersion = new QBarSeries();
-    spectreLaxDissipation = new QBarSeries();
-    spectreLaxWendroffDispersion = new QBarSeries();
-    spectreLaxWendroffDissipation = new QBarSeries();
+    spectrumUpwindDispersion = new QBarSeries();
+    spectrumUpwindDissipation = new QBarSeries();
+    spectrumLaxDispersion = new QBarSeries();
+    spectrumLaxDissipation = new QBarSeries();
+    spectrumLaxWendroffDispersion = new QBarSeries();
+    spectrumLaxWendroffDissipation = new QBarSeries();
 
     seriesUpwindIdealDissipation->append(QList<QPointF>() << QPointF(0.0, 0.0) << QPointF(0.5, 0.0));
     seriesLaxIdealDissipation->append(QList<QPointF>() << QPointF(0.0, 0.0) << QPointF(0.5, 0.0));
@@ -211,7 +214,7 @@ Form::Form(QWidget *parent)
     QChart *upwindDispersionChart = new QChart();
     upwindDispersionChart->addSeries(seriesUpwindIdealDispersion);
     upwindDispersionChart->addSeries(seriesUpwindDispersion);
-    upwindDispersionChart->addSeries(spectreUpwindDispersion);
+    upwindDispersionChart->addSeries(spectrumUpwindDispersion);
     upwindDispersionChart->setTitle(tr("Dispersion error"));
     upwindDispersionChart->legend()->hide();
 
@@ -223,7 +226,7 @@ Form::Form(QWidget *parent)
     upwindDispersionChart->addAxis(axisXUpwindDispersion, Qt::AlignBottom);
     seriesUpwindIdealDispersion->attachAxis(axisXUpwindDispersion);
     seriesUpwindDispersion->attachAxis(axisXUpwindDispersion);
-    spectreUpwindDispersion->attachAxis(axisXUpwindDispersion);
+    spectrumUpwindDispersion->attachAxis(axisXUpwindDispersion);
     QValueAxis *axisYUpwindDispersion = new QValueAxis;
     axisYUpwindDispersion->setLineVisible(false);
     setGrid(axisYUpwindDispersion);
@@ -232,7 +235,7 @@ Form::Form(QWidget *parent)
     upwindDispersionChart->addAxis(axisYUpwindDispersion, Qt::AlignLeft);
     seriesUpwindIdealDispersion->attachAxis(axisYUpwindDispersion);
     seriesUpwindDispersion->attachAxis(axisYUpwindDispersion);
-    spectreUpwindDispersion->attachAxis(axisYUpwindDispersion);
+    spectrumUpwindDispersion->attachAxis(axisYUpwindDispersion);
 
     upwindDispersion = new QChartView();
     upwindDispersion->setRenderHint(QPainter::Antialiasing);
@@ -241,7 +244,7 @@ Form::Form(QWidget *parent)
     QChart *upwindDissipationChart = new QChart();
     upwindDissipationChart->addSeries(seriesUpwindIdealDissipation);
     upwindDissipationChart->addSeries(seriesUpwindDissipation);
-    upwindDissipationChart->addSeries(spectreUpwindDissipation);
+    upwindDissipationChart->addSeries(spectrumUpwindDissipation);
     upwindDissipationChart->setTitle(tr("Dissipation error"));
     upwindDissipationChart->legend()->hide();
 
@@ -253,7 +256,7 @@ Form::Form(QWidget *parent)
     upwindDissipationChart->addAxis(axisXUpwindDissipation, Qt::AlignBottom);
     seriesUpwindIdealDissipation->attachAxis(axisXUpwindDissipation);
     seriesUpwindDissipation->attachAxis(axisXUpwindDissipation);
-    spectreUpwindDissipation->attachAxis(axisXUpwindDissipation);
+    spectrumUpwindDissipation->attachAxis(axisXUpwindDissipation);
     QValueAxis *axisYUpwindDissipation = new QValueAxis;
     axisYUpwindDissipation->setLineVisible(false);
     setGrid(axisYUpwindDissipation);
@@ -262,7 +265,7 @@ Form::Form(QWidget *parent)
     upwindDissipationChart->addAxis(axisYUpwindDissipation, Qt::AlignLeft);
     seriesUpwindIdealDissipation->attachAxis(axisYUpwindDissipation);
     seriesUpwindDissipation->attachAxis(axisYUpwindDissipation);
-    spectreUpwindDissipation->attachAxis(axisYUpwindDissipation);
+    spectrumUpwindDissipation->attachAxis(axisYUpwindDissipation);
 
     upwindDissipation = new QChartView();
     upwindDissipation->setRenderHint(QPainter::Antialiasing);
@@ -301,7 +304,7 @@ Form::Form(QWidget *parent)
     QChart *laxDispersionChart = new QChart();
     laxDispersionChart->addSeries(seriesLaxIdealDispersion);
     laxDispersionChart->addSeries(seriesLaxDispersion);
-    laxDispersionChart->addSeries(spectreLaxDispersion);
+    laxDispersionChart->addSeries(spectrumLaxDispersion);
     laxDispersionChart->setTitle(tr("Dispersion error"));
     laxDispersionChart->legend()->hide();
 
@@ -313,7 +316,7 @@ Form::Form(QWidget *parent)
     laxDispersionChart->addAxis(axisXLaxDispersion, Qt::AlignBottom);
     seriesLaxIdealDispersion->attachAxis(axisXLaxDispersion);
     seriesLaxDispersion->attachAxis(axisXLaxDispersion);
-    spectreLaxDispersion->attachAxis(axisXLaxDispersion);
+    spectrumLaxDispersion->attachAxis(axisXLaxDispersion);
     QValueAxis *axisYLaxDispersion = new QValueAxis;
     axisYLaxDispersion->setLineVisible(false);
     setGrid(axisYLaxDispersion);
@@ -322,7 +325,7 @@ Form::Form(QWidget *parent)
     laxDispersionChart->addAxis(axisYLaxDispersion, Qt::AlignLeft);
     seriesLaxIdealDispersion->attachAxis(axisYLaxDispersion);
     seriesLaxDispersion->attachAxis(axisYLaxDispersion);
-    spectreLaxDispersion->attachAxis(axisYLaxDispersion);
+    spectrumLaxDispersion->attachAxis(axisYLaxDispersion);
 
     laxDispersion = new QChartView();
     laxDispersion->setRenderHint(QPainter::Antialiasing);
@@ -331,7 +334,7 @@ Form::Form(QWidget *parent)
     QChart *laxDissipationChart = new QChart();
     laxDissipationChart->addSeries(seriesLaxIdealDissipation);
     laxDissipationChart->addSeries(seriesLaxDissipation);
-    laxDissipationChart->addSeries(spectreLaxDissipation);
+    laxDissipationChart->addSeries(spectrumLaxDissipation);
     laxDissipationChart->setTitle(tr("Dissipation error"));
     laxDissipationChart->legend()->hide();
 
@@ -343,7 +346,7 @@ Form::Form(QWidget *parent)
     laxDissipationChart->addAxis(axisXLaxDissipation, Qt::AlignBottom);
     seriesLaxIdealDissipation->attachAxis(axisXLaxDissipation);
     seriesLaxDissipation->attachAxis(axisXLaxDissipation);
-    spectreLaxDissipation->attachAxis(axisXLaxDissipation);
+    spectrumLaxDissipation->attachAxis(axisXLaxDissipation);
     QValueAxis *axisYLaxDissipation = new QValueAxis;
     axisYLaxDissipation->setLineVisible(false);
     setGrid(axisYLaxDissipation);
@@ -352,7 +355,7 @@ Form::Form(QWidget *parent)
     laxDissipationChart->addAxis(axisYLaxDissipation, Qt::AlignLeft);
     seriesLaxIdealDissipation->attachAxis(axisYLaxDissipation);
     seriesLaxDissipation->attachAxis(axisYLaxDissipation);
-    spectreLaxDissipation->attachAxis(axisYLaxDissipation);
+    spectrumLaxDissipation->attachAxis(axisYLaxDissipation);
 
     laxDissipation = new QChartView();
     laxDissipation->setRenderHint(QPainter::Antialiasing);
@@ -391,7 +394,7 @@ Form::Form(QWidget *parent)
     QChart *laxWendroffDispersionChart = new QChart();
     laxWendroffDispersionChart->addSeries(seriesLaxWendroffIdealDispersion);
     laxWendroffDispersionChart->addSeries(seriesLaxWendroffDispersion);
-    laxWendroffDispersionChart->addSeries(spectreLaxWendroffDispersion);
+    laxWendroffDispersionChart->addSeries(spectrumLaxWendroffDispersion);
     laxWendroffDispersionChart->setTitle(tr("Dispersion error"));
     laxWendroffDispersionChart->legend()->hide();
 
@@ -403,7 +406,7 @@ Form::Form(QWidget *parent)
     laxWendroffDispersionChart->addAxis(axisXLaxWendroffDispersion, Qt::AlignBottom);
     seriesLaxWendroffIdealDispersion->attachAxis(axisXLaxWendroffDispersion);
     seriesLaxWendroffDispersion->attachAxis(axisXLaxWendroffDispersion);
-    spectreLaxWendroffDispersion->attachAxis(axisXLaxWendroffDispersion);
+    spectrumLaxWendroffDispersion->attachAxis(axisXLaxWendroffDispersion);
     QValueAxis *axisYLaxWendroffDispersion = new QValueAxis;
     axisYLaxWendroffDispersion->setLineVisible(false);
     setGrid(axisYLaxWendroffDispersion);
@@ -412,7 +415,7 @@ Form::Form(QWidget *parent)
     laxWendroffDispersionChart->addAxis(axisYLaxWendroffDispersion, Qt::AlignLeft);
     seriesLaxWendroffIdealDispersion->attachAxis(axisYLaxWendroffDispersion);
     seriesLaxWendroffDispersion->attachAxis(axisYLaxWendroffDispersion);
-    spectreLaxWendroffDispersion->attachAxis(axisYLaxWendroffDispersion);
+    spectrumLaxWendroffDispersion->attachAxis(axisYLaxWendroffDispersion);
 
     laxWendroffDispersion = new QChartView();
     laxWendroffDispersion->setRenderHint(QPainter::Antialiasing);
@@ -421,7 +424,7 @@ Form::Form(QWidget *parent)
     QChart *laxWendroffDissipationChart = new QChart();
     laxWendroffDissipationChart->addSeries(seriesLaxWendroffIdealDissipation);
     laxWendroffDissipationChart->addSeries(seriesLaxWendroffDissipation);
-    laxWendroffDissipationChart->addSeries(spectreLaxWendroffDissipation);
+    laxWendroffDissipationChart->addSeries(spectrumLaxWendroffDissipation);
     laxWendroffDissipationChart->setTitle(tr("Dissipation error"));
     laxWendroffDissipationChart->legend()->hide();
 
@@ -433,7 +436,7 @@ Form::Form(QWidget *parent)
     laxWendroffDissipationChart->addAxis(axisXLaxWendroffDissipation, Qt::AlignBottom);
     seriesLaxWendroffIdealDissipation->attachAxis(axisXLaxWendroffDissipation);
     seriesLaxWendroffDissipation->attachAxis(axisXLaxWendroffDissipation);
-    spectreLaxWendroffDissipation->attachAxis(axisXLaxWendroffDissipation);
+    spectrumLaxWendroffDissipation->attachAxis(axisXLaxWendroffDissipation);
     QValueAxis *axisYLaxWendroffDissipation = new QValueAxis;
     axisYLaxWendroffDissipation->setLineVisible(false);
     setGrid(axisYLaxWendroffDissipation);
@@ -442,7 +445,7 @@ Form::Form(QWidget *parent)
     laxWendroffDissipationChart->addAxis(axisYLaxWendroffDissipation, Qt::AlignLeft);
     seriesLaxWendroffIdealDissipation->attachAxis(axisYLaxWendroffDissipation);
     seriesLaxWendroffDissipation->attachAxis(axisYLaxWendroffDissipation);
-    spectreUpwindDissipation->attachAxis(axisYLaxWendroffDissipation);
+    spectrumLaxWendroffDissipation->attachAxis(axisYLaxWendroffDissipation);
 
     laxWendroffDissipation = new QChartView();
     laxWendroffDissipation->setRenderHint(QPainter::Antialiasing);
@@ -529,6 +532,7 @@ Form::Form(QWidget *parent)
     connect(timer, SIGNAL(timeout()), this, SLOT(Tick()));
 
     initiateState();
+    updateSpectrum();
 }
 
 Form::~Form()
@@ -550,6 +554,7 @@ void Form::update_nx_from_slider(int n)
     sliderNX->blockSignals(false);
 
     initiateState();
+    updateSpectrum();
 }
 
 void Form::update_nx(int n)
@@ -574,6 +579,7 @@ void Form::update_nx(int n)
     sliderNX->blockSignals(false);
 
     initiateState();
+    updateSpectrum();
 }
 
 void Form::update_nt(int n)
@@ -660,7 +666,7 @@ void Form::initiateState()
     param = new Parameters(spinBoxNX->value()+1, spinBoxNT->value(), kRangeX, kRangeT);
 
     InitialProfile profile = comboBoxInitial->currentData().value<InitialProfile>();
-    state_.resize(param->get_nx()/* + 1*/);
+    state_.resize(param->get_nx());
     tmp_state_.resize(state_.size());
     for (decltype(state_.size()) i = 0; i < state_.size(); ++i)
         state_[i] = initial(i * param->get_dx(), profile);
@@ -675,6 +681,32 @@ void Form::initiateState()
     updateDispersionDiffusionSolution();
 }
 
+void Form::updateSpectrum()
+{
+qDebug() << "updating spectrum...";
+    auto sp_len = state_.size() - 1;
+    fftw_complex sp[kNxMax];
+    //fftw_plan plan = fftw_plan_dft_1d(sp_len, sp, sp, FFTW_FORWARD, FFTW_ESTIMATE);
+    for (decltype(sp_len) i = 0; i < sp_len; ++i)
+    {
+        sp[i][0] = state_[i];
+        sp[i][1] = 0.0;
+    }
+    /*fftw_execute(plan);
+    fftw_destroy_plan(plan);
+    fftw_free(sp);
+
+    std::vector<double> spectrum(sp_len);
+    std::transform(sp, sp+sp_len, spectrum.begin(), [](fftw_complex c){return std::norm(*reinterpret_cast<std::complex<double>*>(&c));});
+    auto max_norm = *std::max_element(spectrum.begin(), spectrum.end());
+
+    QBarSet* spectrum_data = new QBarSet("");
+    spectrumUpwindDispersion->clear();
+    for (decltype(spectrum.size()) i = 0; i < spectrum.size(); ++i)
+        spectrum_data->append(spectrum[i] / max_norm);
+    spectrumUpwindDispersion->append(spectrum_data);*/
+}
+
 void Form::Solve()
 {
     pushButtonSolve->setEnabled(false);
@@ -686,6 +718,7 @@ void Form::Solve()
     sliderNT->setEnabled(false);
 
     initiateState();
+    updateSpectrum();
 
     showState();
 

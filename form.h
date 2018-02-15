@@ -42,6 +42,7 @@ private slots:
     void update_nx(int n);
     void update_nt(int n);
     void updateLabels();
+    void updateSpectrum();
     void initiateState();
     void updateDispersionDiffusionSolution();
     void Solve();
@@ -69,7 +70,7 @@ private:
     QLineSeries *seriesUpwindIdealDissipation, *seriesLaxIdealDissipation, *seriesLaxWendroffIdealDissipation;
     QLineSeries *seriesUpwindDispersion, *seriesLaxDispersion, *seriesLaxWendroffDispersion;
     QLineSeries *seriesUpwindDissipation, *seriesLaxDissipation, *seriesLaxWendroffDissipation;
-    QBarSeries *spectreUpwindDispersion, *spectreUpwindDissipation, *spectreLaxDispersion, *spectreLaxDissipation, *spectreLaxWendroffDispersion, *spectreLaxWendroffDissipation;
+    QBarSeries *spectrumUpwindDispersion, *spectrumUpwindDissipation, *spectrumLaxDispersion, *spectrumLaxDissipation, *spectrumLaxWendroffDispersion, *spectrumLaxWendroffDissipation;
 
     QTimer *timer;
 
