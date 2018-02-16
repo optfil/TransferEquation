@@ -41,6 +41,7 @@ private slots:
     void update_nx_from_slider(int log_n);
     void update_nx(int n);
     void update_nt(int n);
+    void selectionChanged();
     void updateLabels();
     void updateSpectrum();
     void initiateState();

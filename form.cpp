@@ -528,7 +528,7 @@ Form::Form(QWidget *parent)
 
     setLayout(layoutMain);
 
-    connect(comboBoxInitial, SIGNAL(currentIndexChanged(int)), this, SLOT(initiateState()));
+    connect(comboBoxInitial, SIGNAL(currentIndexChanged(int)), this, SLOT(selectionChanged()));
     connect(sliderNX, SIGNAL(valueChanged(int)), this, SLOT(update_nx_from_slider(int)));
     connect(sliderNT, SIGNAL(valueChanged(int)), this, SLOT(update_nt(int)));
     connect(spinBoxNX, SIGNAL(valueChanged(int)), this, SLOT(update_nx(int)));
@@ -600,6 +600,12 @@ void Form::update_nt(int n)
     sliderNT->blockSignals(false);
 
     initiateState();
+}
+
+void Form::selectionChanged()
+{
+    initiateState();
+    updateSpectrum();
 }
 
 void Form::updateLabels()
