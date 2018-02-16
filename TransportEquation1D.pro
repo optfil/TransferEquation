@@ -34,5 +34,5 @@ HEADERS += \
 
 TRANSLATIONS += TransferEquation1D_rus.ts
 
-LIBS += "$$PWD/fftw3.lib"
+LIBS += "$$PWD/libfftw3-3.dll"
 

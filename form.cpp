@@ -612,7 +612,7 @@ void Form::updateDispersionDiffusionSolution()
     double ideal_disp_max = 2.0*M_PI*param->get_alpha() * 0.5;
     for (int i = 0; i < param->get_nx()/2+1; ++i)
     {
-        double xi = static_cast<double>(i) / param->get_nx();
+        double xi = static_cast<double>(i) / (param->get_nx()-1);
 
         coeffs = dispersion_diffusion(xi, param->get_alpha(), Form::Upwind);
         upwind_disp_data.append(QPointF(xi, coeffs.first));
@@ -685,26 +685,27 @@ void Form::updateSpectrum()
 {
 qDebug() << "updating spectrum...";
     auto sp_len = state_.size() - 1;
-    fftw_complex sp[kNxMax];
-    //fftw_plan plan = fftw_plan_dft_1d(sp_len, sp, sp, FFTW_FORWARD, FFTW_ESTIMATE);
+    fftw_complex *sp = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * sp_len);
+    fftw_plan plan = fftw_plan_dft_1d(sp_len, sp, sp, FFTW_FORWARD, FFTW_ESTIMATE);
     for (decltype(sp_len) i = 0; i < sp_len; ++i)
     {
         sp[i][0] = state_[i];
         sp[i][1] = 0.0;
     }
-    /*fftw_execute(plan);
+    fftw_execute(plan);
     fftw_destroy_plan(plan);
     fftw_free(sp);
 
     std::vector<double> spectrum(sp_len);
-    std::transform(sp, sp+sp_len, spectrum.begin(), [](fftw_complex c){return std::norm(*reinterpret_cast<std::complex<double>*>(&c));});
+    std::transform(sp, sp+sp_len, spectrum.begin(), [](fftw_complex c){return std::norm(std::complex<double>(c[0], c[1]));});
     auto max_norm = *std::max_element(spectrum.begin(), spectrum.end());
 
     QBarSet* spectrum_data = new QBarSet("");
     spectrumUpwindDispersion->clear();
     for (decltype(spectrum.size()) i = 0; i < spectrum.size(); ++i)
         spectrum_data->append(spectrum[i] / max_norm);
-    spectrumUpwindDispersion->append(spectrum_data);*/
+qDebug() << *spectrum_data;
+    spectrumUpwindDispersion->append(spectrum_data);
 }
 
 void Form::Solve()
