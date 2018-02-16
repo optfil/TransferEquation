@@ -205,6 +205,7 @@ Form::Form(QWidget *parent)
 
     labelCFL_1 = new QLabel(tr("CFL number"));
     labelCFL_2 = new QLabel(tr("α = "));
+    labelCFL_2->setFont(QFont("Times New Roman", 14));
     labelCFL_2->setAlignment(Qt::AlignRight);
     labelCFL = new QLabel();
 
@@ -222,7 +223,9 @@ Form::Form(QWidget *parent)
     QValueAxis *axisXUpwindDispersion = new QValueAxis;
     axisXUpwindDispersion->setLineVisible(false);
     setGrid(axisXUpwindDispersion);
-    axisXUpwindDispersion->setLabelsVisible(false);
+    axisXUpwindDispersion->setTitleText("ϰ / ϰ_N");
+    axisXUpwindDispersion->setTitleFont(QFont("Times New Roman", 14));
+    axisXUpwindDispersion->setTickCount(3);
     axisXUpwindDispersion->setRange(0.0, 0.5);
     upwindDispersionChart->addAxis(axisXUpwindDispersion, Qt::AlignBottom);
     seriesUpwindIdealDispersion->attachAxis(axisXUpwindDispersion);
@@ -235,7 +238,9 @@ Form::Form(QWidget *parent)
     QValueAxis *axisYUpwindDispersion = new QValueAxis;
     axisYUpwindDispersion->setLineVisible(false);
     setGrid(axisYUpwindDispersion);
-    axisYUpwindDispersion->setLabelsVisible(false);
+    axisYUpwindDispersion->setTitleText("Ω / (c⋅ϰ_N)");
+    axisYUpwindDispersion->setTitleFont(QFont("Times New Roman", 14));
+    axisYUpwindDispersion->setTickCount(3);
     axisYUpwindDispersion->setRange(0.0, 2.0);
     upwindDispersionChart->addAxis(axisYUpwindDispersion, Qt::AlignLeft);
     seriesUpwindIdealDispersion->attachAxis(axisYUpwindDispersion);
@@ -256,7 +261,9 @@ Form::Form(QWidget *parent)
     QValueAxis *axisXUpwindDissipation = new QValueAxis;
     axisXUpwindDissipation->setLineVisible(false);
     setGrid(axisXUpwindDissipation);
-    axisXUpwindDissipation->setLabelsVisible(false);
+    axisXUpwindDissipation->setTitleText("ϰ / ϰ_N");
+    axisXUpwindDissipation->setTitleFont(QFont("Times New Roman", 14));
+    axisXUpwindDissipation->setTickCount(3);
     axisXUpwindDissipation->setRange(0.0, 0.5);
     upwindDissipationChart->addAxis(axisXUpwindDissipation, Qt::AlignBottom);
     seriesUpwindIdealDissipation->attachAxis(axisXUpwindDissipation);
@@ -269,7 +276,9 @@ Form::Form(QWidget *parent)
     QValueAxis *axisYUpwindDissipation = new QValueAxis;
     axisYUpwindDissipation->setLineVisible(false);
     setGrid(axisYUpwindDissipation);
-    axisYUpwindDissipation->setLabelsVisible(false);
+    axisYUpwindDissipation->setTitleText("γ / (c⋅ϰ_N)");
+    axisYUpwindDissipation->setTitleFont(QFont("Times New Roman", 14));
+    axisYUpwindDissipation->setTickCount(3);
     axisYUpwindDissipation->setRange(-3.0, 3.0);
     upwindDissipationChart->addAxis(axisYUpwindDissipation, Qt::AlignLeft);
     seriesUpwindIdealDissipation->attachAxis(axisYUpwindDissipation);
@@ -320,7 +329,9 @@ Form::Form(QWidget *parent)
     QValueAxis *axisXLaxDispersion = new QValueAxis;
     axisXLaxDispersion->setLineVisible(false);
     setGrid(axisXLaxDispersion);
-    axisXLaxDispersion->setLabelsVisible(false);
+    axisXLaxDispersion->setTitleText("ϰ / ϰ_N");
+    axisXLaxDispersion->setTitleFont(QFont("Times New Roman", 14));
+    axisXLaxDispersion->setTickCount(3);
     axisXLaxDispersion->setRange(0.0, 0.5);
     laxDispersionChart->addAxis(axisXLaxDispersion, Qt::AlignBottom);
     seriesLaxIdealDispersion->attachAxis(axisXLaxDispersion);
@@ -333,7 +344,9 @@ Form::Form(QWidget *parent)
     QValueAxis *axisYLaxDispersion = new QValueAxis;
     axisYLaxDispersion->setLineVisible(false);
     setGrid(axisYLaxDispersion);
-    axisYLaxDispersion->setLabelsVisible(false);
+    axisYLaxDispersion->setTitleText("Ω / (c⋅ϰ_N)");
+    axisYLaxDispersion->setTitleFont(QFont("Times New Roman", 14));
+    axisYLaxDispersion->setTickCount(3);
     axisYLaxDispersion->setRange(0.0, 2.0);
     laxDispersionChart->addAxis(axisYLaxDispersion, Qt::AlignLeft);
     seriesLaxIdealDispersion->attachAxis(axisYLaxDispersion);
@@ -354,7 +367,9 @@ Form::Form(QWidget *parent)
     QValueAxis *axisXLaxDissipation = new QValueAxis;
     axisXLaxDissipation->setLineVisible(false);
     setGrid(axisXLaxDissipation);
-    axisXLaxDissipation->setLabelsVisible(false);
+    axisXLaxDissipation->setTitleText("ϰ / ϰ_N");
+    axisXLaxDissipation->setTitleFont(QFont("Times New Roman", 14));
+    axisXLaxDissipation->setTickCount(3);
     axisXLaxDissipation->setRange(0.0, 0.5);
     laxDissipationChart->addAxis(axisXLaxDissipation, Qt::AlignBottom);
     seriesLaxIdealDissipation->attachAxis(axisXLaxDissipation);
@@ -367,7 +382,9 @@ Form::Form(QWidget *parent)
     QValueAxis *axisYLaxDissipation = new QValueAxis;
     axisYLaxDissipation->setLineVisible(false);
     setGrid(axisYLaxDissipation);
-    axisYLaxDissipation->setLabelsVisible(false);
+    axisYLaxDissipation->setTitleText("γ / (c⋅ϰ_N)");
+    axisYLaxDissipation->setTitleFont(QFont("Times New Roman", 14));
+    axisYLaxDissipation->setTickCount(3);
     axisYLaxDissipation->setRange(-3.0, 3.0);
     laxDissipationChart->addAxis(axisYLaxDissipation, Qt::AlignLeft);
     seriesLaxIdealDissipation->attachAxis(axisYLaxDissipation);
@@ -418,7 +435,9 @@ Form::Form(QWidget *parent)
     QValueAxis *axisXLaxWendroffDispersion = new QValueAxis;
     axisXLaxWendroffDispersion->setLineVisible(false);
     setGrid(axisXLaxWendroffDispersion);
-    axisXLaxWendroffDispersion->setLabelsVisible(false);
+    axisXLaxWendroffDispersion->setTitleText("ϰ / ϰ_N");
+    axisXLaxWendroffDispersion->setTitleFont(QFont("Times New Roman", 14));
+    axisXLaxWendroffDispersion->setTickCount(3);
     axisXLaxWendroffDispersion->setRange(0.0, 0.5);
     laxWendroffDispersionChart->addAxis(axisXLaxWendroffDispersion, Qt::AlignBottom);
     seriesLaxWendroffIdealDispersion->attachAxis(axisXLaxWendroffDispersion);
@@ -431,7 +450,9 @@ Form::Form(QWidget *parent)
     QValueAxis *axisYLaxWendroffDispersion = new QValueAxis;
     axisYLaxWendroffDispersion->setLineVisible(false);
     setGrid(axisYLaxWendroffDispersion);
-    axisYLaxWendroffDispersion->setLabelsVisible(false);
+    axisYLaxWendroffDispersion->setTitleText("Ω / (c⋅ϰ_N)");
+    axisYLaxWendroffDispersion->setTitleFont(QFont("Times New Roman", 14));
+    axisYLaxWendroffDispersion->setTickCount(3);
     axisYLaxWendroffDispersion->setRange(0.0, 2.0);
     laxWendroffDispersionChart->addAxis(axisYLaxWendroffDispersion, Qt::AlignLeft);
     seriesLaxWendroffIdealDispersion->attachAxis(axisYLaxWendroffDispersion);
@@ -452,7 +473,9 @@ Form::Form(QWidget *parent)
     QValueAxis *axisXLaxWendroffDissipation = new QValueAxis;
     axisXLaxWendroffDissipation->setLineVisible(false);
     setGrid(axisXLaxWendroffDissipation);
-    axisXLaxWendroffDissipation->setLabelsVisible(false);
+    axisXLaxWendroffDissipation->setTitleText("ϰ / ϰ_N");
+    axisXLaxWendroffDissipation->setTitleFont(QFont("Times New Roman", 14));
+    axisXLaxWendroffDissipation->setTickCount(3);
     axisXLaxWendroffDissipation->setRange(0.0, 0.5);
     laxWendroffDissipationChart->addAxis(axisXLaxWendroffDissipation, Qt::AlignBottom);
     seriesLaxWendroffIdealDissipation->attachAxis(axisXLaxWendroffDissipation);
@@ -465,7 +488,9 @@ Form::Form(QWidget *parent)
     QValueAxis *axisYLaxWendroffDissipation = new QValueAxis;
     axisYLaxWendroffDissipation->setLineVisible(false);
     setGrid(axisYLaxWendroffDissipation);
-    axisYLaxWendroffDissipation->setLabelsVisible(false);
+    axisYLaxWendroffDissipation->setTitleText("γ / (c⋅ϰ_N)");
+    axisYLaxWendroffDissipation->setTitleFont(QFont("Times New Roman", 14));
+    axisYLaxWendroffDissipation->setTickCount(3);
     axisYLaxWendroffDissipation->setRange(-3.0, 3.0);
     laxWendroffDissipationChart->addAxis(axisYLaxWendroffDissipation, Qt::AlignLeft);
     seriesLaxWendroffIdealDissipation->attachAxis(axisYLaxWendroffDissipation);
