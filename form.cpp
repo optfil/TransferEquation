@@ -170,6 +170,7 @@ Form::Form(QWidget *parent)
     sliderNX = new QSlider(Qt::Horizontal);
     sliderNX->setRange(1, 4);
     sliderNX->setSingleStep(1);
+    sliderNX->setPageStep(1);
     sliderNX->setTickInterval(1);
     sliderNX->setTickPosition(QSlider::TicksBelow);
     sliderNX->setValue(1);
@@ -551,7 +552,7 @@ Form::Form(QWidget *parent)
     connect(sliderNT, SIGNAL(valueChanged(int)), this, SLOT(update_nt(int)));
     connect(spinBoxNX, SIGNAL(valueChanged(int)), this, SLOT(update_nx(int)));
     connect(spinBoxNT, SIGNAL(valueChanged(int)), this, SLOT(update_nt(int)));
-    connect(tabWidgetMethods, SIGNAL(currentChanged(int)), this, SLOT(updateDispersionDiffusionSolution()));
+    connect(tabWidgetMethods, SIGNAL(currentChanged(int)), this, SLOT(updateDispersionDiffusion()));
     connect(pushButtonSolve, SIGNAL(clicked(bool)), this, SLOT(Solve()));
     connect(timer, SIGNAL(timeout()), this, SLOT(Tick()));
 
@@ -633,7 +634,7 @@ void Form::updateLabels()
     labelCFL->setText(QString::number(param->get_alpha(), 'f', 3));
 }
 
-void Form::updateDispersionDiffusionSolution()
+void Form::updateDispersionDiffusion()
 {
     method_ = static_cast<MethodType>(tabWidgetMethods->currentIndex());
 
@@ -684,10 +685,6 @@ void Form::updateDispersionDiffusionSolution()
     seriesLaxWendroffDispersion->append(lax_wendroff_disp_data);
     seriesLaxWendroffDissipation->clear();
     seriesLaxWendroffDissipation->append(lax_wendroff_diff_data);
-
-    upwindSolution->chart()->removeAllSeries();
-    laxSolution->chart()->removeAllSeries();
-    laxWendroffSolution->chart()->removeAllSeries();
 }
 
 void Form::initiateState()
@@ -708,7 +705,8 @@ void Form::initiateState()
     seriesInitial->append(init_data);
 
     updateLabels();
-    updateDispersionDiffusionSolution();
+    updateDispersionDiffusion();
+    cleanSolution();
 }
 
 void Form::updateSpectrum()
@@ -735,7 +733,7 @@ void Form::updateSpectrum()
     for (decltype(spectrum.size()) i = 0; i < spectrum.size(); ++i)
         spectrum_data.append(spectrum[i] / max_norm * 1.5);
 
-    for (auto barseries: {spectrumUpwindDispersion, spectrumUpwindDissipation, spectrumLaxDispersion, spectrumLaxDissipation, spectrumLaxWendroffDispersion, spectrumLaxWendroffDissipation})
+    for (auto& barseries: {spectrumUpwindDispersion, spectrumUpwindDissipation, spectrumLaxDispersion, spectrumLaxDissipation, spectrumLaxWendroffDispersion, spectrumLaxWendroffDissipation})
     {
         QBarSet *barSpectrum = new QBarSet("");
         barSpectrum->append(spectrum_data);
@@ -745,6 +743,13 @@ void Form::updateSpectrum()
         barseries->attachedAxes()[0]->setRange(0, barSpectrum->count());
         barseries->setBarWidth(barSpectrum->count()*(barSpectrum->count() < 50 ? 0.03 : 0.01));
     }
+}
+
+void Form::cleanSolution()
+{
+    upwindSolution->chart()->removeAllSeries();
+    laxSolution->chart()->removeAllSeries();
+    laxWendroffSolution->chart()->removeAllSeries();
 }
 
 void Form::Solve()
@@ -798,20 +803,28 @@ void Form::Tick()
             ++t_index;
             showState();
         }
+
+        if (*std::max_element(state_.begin(), state_.end()) > 10.0 || *std::min_element(state_.begin(), state_.end()) < -10.0)
+            finishCalculation();
     }
     else
     {
         t_index = 1;
 
-        timer->stop();
-        pushButtonSolve->setEnabled(true);
-        tabWidgetMethods->setEnabled(true);
-        comboBoxInitial->setEnabled(true);
-        spinBoxNX->setEnabled(true);
-        spinBoxNT->setEnabled(true);
-        sliderNX->setEnabled(true);
-        sliderNT->setEnabled(true);
+        finishCalculation();
     }
+}
+
+void Form::finishCalculation()
+{
+    timer->stop();
+    pushButtonSolve->setEnabled(true);
+    tabWidgetMethods->setEnabled(true);
+    comboBoxInitial->setEnabled(true);
+    spinBoxNX->setEnabled(true);
+    spinBoxNT->setEnabled(true);
+    sliderNX->setEnabled(true);
+    sliderNT->setEnabled(true);
 }
 
 void Form::showState()
@@ -829,6 +842,9 @@ void Form::showState()
         chart = laxWendroffSolution->chart();
         break;
     }
+
+    for (auto& series: chart->series())
+        series->setOpacity(0.5);
 
     QLineSeries *series = new QLineSeries();
     chart->addSeries(series);

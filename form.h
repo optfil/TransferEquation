@@ -45,7 +45,7 @@ private slots:
     void updateLabels();
     void updateSpectrum();
     void initiateState();
-    void updateDispersionDiffusionSolution();
+    void updateDispersionDiffusion();
     void Solve();
     void Tick();
 
@@ -82,6 +82,8 @@ private:
     double t_cur_;
 
     void showState();
+    void finishCalculation();
+    void cleanSolution();
 };
 
 #endif // FORM_H
