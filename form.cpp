@@ -226,7 +226,13 @@ Form::Form(QWidget *parent)
     upwindDispersionChart->addAxis(axisXUpwindDispersion, Qt::AlignBottom);
     seriesUpwindIdealDispersion->attachAxis(axisXUpwindDispersion);
     seriesUpwindDispersion->attachAxis(axisXUpwindDispersion);
-    spectrumUpwindDispersion->attachAxis(axisXUpwindDispersion);
+
+    QValueAxis *axisSpectrumXUpwindDispersion = new QValueAxis;
+    axisSpectrumXUpwindDispersion->setLineVisible(false);
+    axisSpectrumXUpwindDispersion->setLabelsVisible(false);
+    upwindDispersionChart->addAxis(axisSpectrumXUpwindDispersion, Qt::AlignBottom);
+    spectrumUpwindDispersion->attachAxis(axisSpectrumXUpwindDispersion);
+
     QValueAxis *axisYUpwindDispersion = new QValueAxis;
     axisYUpwindDispersion->setLineVisible(false);
     setGrid(axisYUpwindDispersion);
@@ -683,7 +689,6 @@ void Form::initiateState()
 
 void Form::updateSpectrum()
 {
-qDebug() << "updating spectrum...";
     auto sp_len = state_.size() - 1;
     fftw_complex *sp = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * sp_len);
     fftw_plan plan = fftw_plan_dft_1d(sp_len, sp, sp, FFTW_FORWARD, FFTW_ESTIMATE);
@@ -696,16 +701,19 @@ qDebug() << "updating spectrum...";
     fftw_destroy_plan(plan);
     fftw_free(sp);
 
-    std::vector<double> spectrum(sp_len);
-    std::transform(sp, sp+sp_len, spectrum.begin(), [](fftw_complex c){return std::norm(std::complex<double>(c[0], c[1]));});
-    auto max_norm = *std::max_element(spectrum.begin(), spectrum.end());
+    std::vector<double> spectrum(sp_len/2);
+    for (decltype(sp_len) i = 0; i < spectrum.size(); ++i)
+        spectrum[i] = std::abs(std::complex<double>(sp[i][0], sp[i][1]));
+    auto max_norm = *std::max_element(++spectrum.begin(), spectrum.end());  // ++ due to 0-harmonic is too high
 
     QBarSet* spectrum_data = new QBarSet("");
     spectrumUpwindDispersion->clear();
     for (decltype(spectrum.size()) i = 0; i < spectrum.size(); ++i)
-        spectrum_data->append(spectrum[i] / max_norm);
-qDebug() << *spectrum_data;
+        spectrum_data->append(spectrum[i] / max_norm * 1.5);
+
+    spectrum_data->setColor(Qt::darkGreen);
     spectrumUpwindDispersion->append(spectrum_data);
+    spectrumUpwindDispersion->attachedAxes()[0]->setRange(0, spectrum_data->count());
 }
 
 void Form::Solve()
