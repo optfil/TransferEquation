@@ -807,15 +807,15 @@ void Form::Tick()
         tmp_state_.back() = state_.back();
         switch (method_)
         {
-        case 0:
+        case Upwind:
             for (decltype(state_.size()) i = 1; i < state_.size()-1; ++i)
                 tmp_state_[i] = state_[i] - param->get_alpha() * (state_[i] - state_[i-1]);
             break;
-        case 1:
+        case Lax:
             for (decltype(state_.size()) i = 1; i < state_.size()-1; ++i)
                 tmp_state_[i] = 0.5*(state_[i+1] + state_[i-1]) - 0.5*param->get_alpha() * (state_[i+1] - state_[i-1]);
             break;
-        case 2:
+        case LaxWendroff:
             for (decltype(state_.size()) i = 1; i < state_.size()-1; ++i)
                 tmp_state_[i] = (1.0 - param->get_alpha()*param->get_alpha()) * state_[i] - 0.5*param->get_alpha() * (state_[i+1] - state_[i-1]) + 0.5*param->get_alpha()*param->get_alpha() * (state_[i+1] + state_[i-1]);
             break;
