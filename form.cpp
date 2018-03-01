@@ -830,7 +830,11 @@ void Form::Tick()
         }
 
         if (*std::max_element(state_.begin(), state_.end()) > 10.0 || *std::min_element(state_.begin(), state_.end()) < -10.0)
+        {
+            t_index = 1;
+            showState();
             finishCalculation();
+        }
     }
     else
     {
